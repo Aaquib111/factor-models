@@ -21,9 +21,13 @@ def get_factor_coefficients(factor_changes, stock_changes):
 
     return alpha, betas, new_variance
 
+
 class Portfolio:
 
     # universe size is n
+    # one equity in universe should be the full market, 
+    # with alpha = 0, beta_m = 1, other betas = 0, episilon being market variance
+
     # alphas is 1xn of alpha (risk premiums) from regressions
     # betas is kxn of beta coefficients
     # eps_vars is 1xn of variances of epsilon (firm specific risk)
@@ -41,9 +45,8 @@ class Portfolio:
         return np.dot(self.alphas, self.weights)
     
     # get portfolio betas, kx1 vector
-    # add one for fully diversified market index, which has beta of 1
     def get_betas(self):
-        return np.dot(self.betas, self.weights) + 1
+        return np.dot(self.betas, self.weights)
     
     # get portfolio specific variance
     def get_eps_vars(self):
