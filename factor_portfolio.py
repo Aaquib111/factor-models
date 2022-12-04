@@ -86,9 +86,9 @@ class Portfolio:
 
     # weights is 1xn of relative weights for each equity, every weight positive
     # weights should sum up to 1
-    def update_weights(self, weights):
+    def update_weights(self, weights=None):
         # if weights sum is 0 (all weights 0), then just make it balanced
-        if np.sum(weights) == 0:
+        if weights is None or np.sum(weights) == 0:
             weights = np.ones_like(weights)
         self.weights = weights / np.sum(weights)
     
@@ -147,7 +147,7 @@ class Portfolio:
 
     # helper function to help optimize weights
         # weights is 1xn for every equity, n universe size
-        def optimize_sharpe_weights(self, *args):
+        def optimize_sharpe_weights(*args):
             weights = []
             for arg in args:
                 weights.append(arg)
