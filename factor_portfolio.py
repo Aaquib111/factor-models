@@ -41,8 +41,7 @@ class Portfolio:
     # factor changes is for regression 
     # factor_returns is kx1 of expected return for each factor, e.g. expected market return
     # factor variances is kx1 of expected variance for each factor
-    def __init__(self, alphas, betas, eps_vars, 
-    factor_changes, factor_returns = None, factor_variances = None):
+    def __init__(self, alphas, betas, eps_vars, factor_changes, factor_returns = None, factor_variances = None):
         self.alphas = alphas
         self.betas = betas
         self.eps_vars = eps_vars
@@ -139,13 +138,13 @@ class Portfolio:
 
 
     # optimize the weights
-    def optimize_weights_numerical(self):
+    def optimize_weights_numerical(self, iterations=100):
         self.update_weights()
         optimal_weights = np.ones_like(self.weights)
         # optimize optimal_weights to maximize output of optimize_sharpe_weights
         
 
-    # helper function to help optimize weights
+        # helper function to help optimize weights
         # weights is 1xn for every equity, n universe size
         def optimize_sharpe_weights(*args):
             weights = []
@@ -157,12 +156,18 @@ class Portfolio:
             return self.get_sharpe()
 
         # Bounded region of parameter space
-        pbounds = {'x': (2, 4), 'y': (-3, 3)}
+        pbounds = dict.fromkeys(range(len(optimal_weights)), (0, 1000))
 
         optimizer = BayesianOptimization(
-            f=self.optimize_sharpe_weights,
+            f=optimize_sharpe_weights,
             pbounds=pbounds,
             random_state=1,
         )
+        optimizer.maximize(
+            init_points=2,
+            n_iter=iterations,
+        )
+        print(optimizer.max)
 
 
+p = Portfolio()
