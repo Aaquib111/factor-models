@@ -41,11 +41,8 @@ class Portfolio:
     # factor changes is for regression 
     # factor_returns is kx1 of expected return for each factor, e.g. expected market return
     # factor variances is kx1 of expected variance for each factor
-    def __init__(self, alphas, betas, eps_vars, 
-    factor_changes, factor_returns = None, factor_variances = None):
-        self.alphas = alphas
-        self.betas = betas
-        self.eps_vars = eps_vars
+    def __init__(self, factor_changes, factor_returns = None, factor_variances = None,
+    alphas=None, betas=None, eps_vars=None):
         
         self.factor_changes = factor_changes
         
@@ -62,7 +59,22 @@ class Portfolio:
             self.factor_variances = factor_changes.var(axis=1)
         else:
             self.factor_variances = factor_variances
-
+        
+        if alphas is None:
+            self.alphas = np.zeros(shape=(1,0))
+        else:
+            self.alphas = alphas
+        
+        if betas is None:
+            num_factors = factor_changes.shape[0]
+            self.betas = np.zeros(shape=(num_factors,0))
+        else:
+            self.betas = betas
+        
+        if eps_vars is None:
+            self.eps_vars = np.zeros(shape=(1,0))
+        else:
+            self.eps_vars = eps_vars
     
     # add a stock to the portfolio, calculate alpha, betas, epsilon
     # stock changes is 1xm for that particular stock, m days
